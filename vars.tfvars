@@ -2,9 +2,9 @@ name="hhh-test"
 eks_version="1.17"
 tags = {
     Owner        = "Monica Shinde"
-    BusinessUnit = "MMM"
-    Environment  = "Development"
-    Application  = "Dev-Applications"
+    BusinessUnit = "HHH"
+    Environment  = "sandbox"
+    Application  = "test-Applications"
 }
 
 iam_role_rbac_map =[

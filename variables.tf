@@ -31,9 +31,9 @@ variable "system_node_group" {
   })
   default = {
     ec2_instance_type = "m5.large"
-    num_nodes         = 3
+    num_nodes         = 2
     min_nodes         = 1
-    max_nodes         = 6
+    max_nodes         = 4
   }
 }
 
@@ -49,9 +49,9 @@ variable "application_node_group" {
   })
   default = {
     ec2_instance_type = "m5.large"
-    num_nodes         = 3
+    num_nodes         = 2
     min_nodes         = 1
-    max_nodes         = 6
+    max_nodes         = 4
     spot_price        = null
     labels            = {}
   }

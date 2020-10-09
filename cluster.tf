@@ -42,7 +42,7 @@ resource "aws_eks_cluster" "cluster" {
     endpoint_private_access = true
     endpoint_public_access  = true
     security_group_ids      = [aws_security_group.cluster.id]
-    subnet_ids              = concat(data.aws_subnet_ids.private_subnets.ids, data.aws_subnet_ids.public_subnets.ids)
+    subnet_ids              = concat(sort(data.aws_subnet_ids.private_subnets.ids), sort(data.aws_subnet_ids.public_subnets.ids))
   }
 
   enabled_cluster_log_types = var.enabled_log_types
@@ -167,7 +167,7 @@ resource "aws_cloudwatch_log_group" "logs" {
 }
 
 data "external" "thumb" {
-  program = ["kubergrunt", "eks", "oidc-thumbprint", "--issuer-url", "${aws_eks_cluster.cluster.identity.0.oidc.0.issuer}"]
+  program = ["kubergrunt", "eks", "oidc-thumbprint", "--issuer-url", aws_eks_cluster.cluster.identity.0.oidc.0.issuer]
 }
 
 ### OIDC Identity Provider config

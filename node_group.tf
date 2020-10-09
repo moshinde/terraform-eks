@@ -50,7 +50,7 @@ resource "aws_launch_configuration" "node_groups" {
 
   associate_public_ip_address = each.value.is_public
   iam_instance_profile        = aws_iam_instance_profile.node_groups[each.key].name
-  image_id                    = data.aws_ami.eks_node.id
+  image_id                    = "ami-00bd551305c4c30d2"
   instance_type               = each.value.ec2_instance_type
   name_prefix                 = "${var.name}-${each.key}-eks-worker"
   security_groups             = concat([aws_security_group.eks_node.id], each.value.extra_security_group_ids)
