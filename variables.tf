@@ -3,20 +3,6 @@ variable "name" {
   type        = string
 }
 
-variable "vpc_id" {
-  description = "ID of the VPC into which the cluster and related resources will be placed"
-}
-
-variable "public_subnet_ids" {
-  description = "List of IDs of public subnets to attach the cluster to"
-  type        = list(string)
-  default     = []
-}
-
-variable "private_subnet_ids" {
-  description = "List of IDs of private subnets to attach the cluster to"
-  type        = list(string)
-}
 
 variable "enabled_log_types" {
   description = "List of control plane log types to enable for the VPC cluster"

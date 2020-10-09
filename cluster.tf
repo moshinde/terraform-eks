@@ -1,3 +1,38 @@
+
+data "aws_caller_identity" "current" {}
+data "aws_vpc" "primary_vpc" {
+  tags = {
+    Name = "${var.name}-vpc"
+  }
+}
+
+data "aws_subnet_ids" "private_subnets" {
+  vpc_id = data.aws_vpc.primary_vpc.id
+
+  tags = {
+    Name = "${var.name}-private*"
+  }
+}
+
+data "aws_subnet_ids" "public_subnets" {
+  vpc_id = data.aws_vpc.primary_vpc.id
+
+  tags = {
+    Name = "${var.name}-public*"
+  }
+}
+locals{
+  iam_role_rbac_map =[
+    {
+      iam_role_arn = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/FullAccess"
+      rbac_groups  = ["system:masters"]
+    },
+    {
+      iam_role_arn = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/PowerUserAccess"
+      rbac_groups  = ["system:masters"]
+    }
+  ]
+}
 resource "aws_eks_cluster" "cluster" {
   name     = var.name
   role_arn = aws_iam_role.control_plane.arn
@@ -7,7 +42,7 @@ resource "aws_eks_cluster" "cluster" {
     endpoint_private_access = true
     endpoint_public_access  = true
     security_group_ids      = [aws_security_group.cluster.id]
-    subnet_ids              = concat(var.private_subnet_ids, var.public_subnet_ids)
+    subnet_ids              = concat(data.aws_subnet_ids.private_subnets.ids, data.aws_subnet_ids.public_subnets.ids)
   }
 
   enabled_cluster_log_types = var.enabled_log_types
@@ -70,7 +105,7 @@ resource "aws_iam_role_policy_attachment" "control_plane_AmazonEKSServicePolicy"
 resource "aws_security_group" "cluster" {
   name        = "${var.name}-eks-cluster"
   description = "${var.name} EKS control plane and hosted node group security group"
-  vpc_id      = var.vpc_id
+  vpc_id      = data.aws_vpc.primary_vpc.id
   tags        = merge(var.tags, { Name : "${var.name}-eks-cluster" })
 }
 

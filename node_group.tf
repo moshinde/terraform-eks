@@ -90,7 +90,7 @@ resource "aws_autoscaling_group" "node_groups" {
   min_size             = each.value.min_nodes
   name                 = "${var.name}-${each.key}-eks-node-group"
   termination_policies = ["OldestLaunchConfiguration", "NewestInstance", "Default"]
-  vpc_zone_identifier  = each.value.is_public ? var.public_subnet_ids : var.private_subnet_ids
+  vpc_zone_identifier  = each.value.is_public ? data.aws_subnet_ids.public_subnets.ids : data.aws_subnet_ids.private_subnets.ids
 
   lifecycle {
     ignore_changes = [
@@ -221,7 +221,7 @@ resource "aws_iam_instance_profile" "node_groups" {
 resource "aws_security_group" "eks_node" {
   name        = "${var.name}-eks-node"
   description = "Security group for all nodes in the ${var.name} cluster"
-  vpc_id      = var.vpc_id
+  vpc_id      = data.aws_vpc.primary_vpc.id
 
   tags = merge(var.tags, {
     Name                                = "${var.name}-eks-node"
