@@ -160,6 +160,15 @@ provider "kubernetes" {
   load_config_file       = false
 }
 
+provider "helm" {
+  alias = "aws_eks_cluster"
+  kubernetes {
+    host                   = module.eks_cluster.cluster.endpoint
+    cluster_ca_certificate = base64decode(module.eks_cluster.cluster.certificate_authority.0.data)
+    token                  = data.aws_eks_cluster_auth.cluster.token
+    load_config_file       = false
+  }
+}
 resource "aws_cloudwatch_log_group" "logs" {
   name              = "/aws/eks/${var.name}/cluster"
   retention_in_days = var.log_retention_days

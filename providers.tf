@@ -1,12 +1,17 @@
 terraform {
   # minimum allowed version
-  required_version = ">= 0.12.24"
 
   backend "s3" {
     bucket         = "moshinde-terraform-eks-sandbox"
-    key            = "ms/deploy-eks"
+    key            = "ms/deploy-eks-to-sandbox"
     region         = "us-east-1"
     profile = "sandbox"
+  }
+
+  required_providers {
+    aws        = "~> 3.0"
+    kubernetes = "~> 1.13"
+    helm       = ">= 1.3.0"
   }
 }
 
