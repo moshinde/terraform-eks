@@ -3,7 +3,7 @@ terraform {
 
   backend "s3" {
     bucket         = "moshinde-terraform-eks-sandbox"
-    key            = "ms/deploy-eks-to-sandbox"
+    key            = "ms/deploy-eks-sandbox"
     region         = "us-east-1"
     profile = "sandbox"
   }

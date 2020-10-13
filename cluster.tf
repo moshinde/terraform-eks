@@ -163,8 +163,8 @@ provider "kubernetes" {
 provider "helm" {
   alias = "aws_eks_cluster"
   kubernetes {
-    host                   = module.eks_cluster.cluster.endpoint
-    cluster_ca_certificate = base64decode(module.eks_cluster.cluster.certificate_authority.0.data)
+    host                   = aws_eks_cluster.cluster.endpoint
+    cluster_ca_certificate = base64decode(aws_eks_cluster.cluster.certificate_authority.0.data)
     token                  = data.aws_eks_cluster_auth.cluster.token
     load_config_file       = false
   }

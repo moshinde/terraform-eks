@@ -26,6 +26,7 @@ resource "kubernetes_storage_class" "topology-aware-ebs" {
 }
 
 resource "kubernetes_namespace" "cluster_autoscaler" {
+  provider = kubernetes.aws_eks_cluster
   metadata {
     name = "cluster-autoscaler"
 
@@ -120,6 +121,7 @@ resource "aws_iam_role_policy" "cluster_autoscaler" {
 EOF
 }
 resource "helm_release" "cluster_autoscaler" {
+  provider = helm.aws_eks_cluster
   name       = "cluster-autoscaler"
   repository = "https://kubernetes-charts.storage.googleapis.com"
   namespace  = local.ns
