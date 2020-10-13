@@ -1,3 +1,16 @@
+locals{
+  iam_role_rbac_map = [
+    {
+      iam_role_arn = "arn:aws:iam::783486464333:role/FullAccess"
+      rbac_groups  = ["system:masters"]
+    },
+    {
+      iam_role_arn = "arn:aws:iam::783486464333:role/PowerUserAccess"
+      rbac_groups  = ["system:masters"]
+    }
+  ]
+}
+
 # This config map defines which roles and users can access the kubernetes cluster.
 resource "kubernetes_config_map" "aws_auth" {
   provider = kubernetes.aws_eks_cluster
@@ -16,7 +29,7 @@ resource "kubernetes_config_map" "aws_auth" {
   - system:bootstrappers
   - system:nodes
 %{endfor~}
-%{for rolemap in var.iam_role_rbac_map~}
+%{for rolemap in local.iam_role_rbac_map~}
 - rolearn: ${rolemap.iam_role_arn}
   username: aws:{{AccountID}}:instance:{{SessionName}}
   groups:

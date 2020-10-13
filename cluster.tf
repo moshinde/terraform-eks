@@ -21,18 +21,6 @@ data "aws_subnet_ids" "public_subnets" {
     Name = "${var.name}-public*"
   }
 }
-locals{
-  iam_role_rbac_map =[
-    {
-      iam_role_arn = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/FullAccess"
-      rbac_groups  = ["system:masters"]
-    },
-    {
-      iam_role_arn = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/PowerUserAccess"
-      rbac_groups  = ["system:masters"]
-    }
-  ]
-}
 resource "aws_eks_cluster" "cluster" {
   name     = var.name
   role_arn = aws_iam_role.control_plane.arn
